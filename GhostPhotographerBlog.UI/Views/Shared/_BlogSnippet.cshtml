@@ -1,0 +1,21 @@
+﻿@using GhostPhotographerBlog.UI.Models
+@model BlogPostViewModel
+
+<div class="blog-snippet" >
+  <div class="titles">
+    <div style="font-size: 48px">
+      <h3>@Model.Title</h3>
+    </div>
+    <div class="col-xs-6">
+      @Model.DisplayAuthor 
+    </div>
+    <div class="col-xs-6" >
+      @Model.DateCreated.ToString("hh:mm | M/dd/yyyy")
+    </div>
+  </div>
+  <div style="font-family: 'Coming Soon', cursive">
+    @Html.Raw(Model.PostContent)
+  </div>
+  <div>@Html.ActionLink("Show More", "Blog", "Home", new { id = Model.Id }, htmlAttributes: new { style = "color: red:" })</div>
+</div>
+ 

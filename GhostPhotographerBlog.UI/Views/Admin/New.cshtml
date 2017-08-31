@@ -1,0 +1,181 @@
+﻿@{
+    ViewBag.Title = "New Post";
+    ViewBag.Date = DateTime.Now.Date.ToString("d");
+}
+@model List<GhostPhotographerBlog.Models.Queries.UserRoles>
+<!DOCTYPE html>
+@if (ViewBag.Role != "Admin" && ViewBag.Role != "Writer") {
+    <script>window.location.href = "http://localhost:56490/"</script>
+} else {
+<html>
+<head>
+  <meta charset="utf-8">
+  <!-- Make sure the path to CKEditor is correct. -->
+  <script src="~/Scripts/jquery-3.1.1.js"></script>
+  <script src="~/CkEditor/ckeditor/ckeditor.js"></script>
+  <script src="~/CkEditor/ckeditor/adapters/jquery.js"></script>
+  <script src="~/Scripts/bootstrap.js"></script>
+  <style href="~/Content/bootstrap.css"></style>
+  <script src="~/Scripts/Ghost_ImageUpload.js"></script>
+</head>
+<body>
+  <h1>New Blog Post</h1>
+  <div>
+    <div class="form-group-lg">
+      <input type="text" class="form-control" name="title" placeholder="Spooky Title Here" />
+    </div>
+    <br />
+    <div class="form-group">
+      <label for="poster">Select Display Author</label>
+      <select name="poster" id="poster" class="form-control">
+        @{
+            foreach (var user in Model) {
+                <option>@user.UserName</option>
+            }
+        }
+      </select>
+    </div>
+    <div class="form-group">
+      <label for="postdate">Post date (Today is @ViewBag.Date)</label>
+      <input type="date" class="form-control" name="postdate" id="pDate" />
+    </div>
+    <div class="form-group">
+      <label for="expdate">Expiration date (leave as is to never expire)</label>
+      <input type="date" class="form-control" name="expdate" id="eDate" />
+    </div>
+    <div class="form-group">
+      <textarea name="editor" id="editor" rows="10" cols="80"></textarea>
+    </div>
+    <div class="form-group-sm">
+      <input type="text" class="form-control" name="tags" placeholder="enter your tags here (separated by a space)" />
+    </div>
+    <div class="form-group">
+      <label for="txtUploadFile">Image:</label>
+      <input type="file" name="UploadFile" id="txtUploadFile" accept="image/jpeg" ) />
+      <div id="imgName" hidden></div>
+    </div>
+    <a onclick="submit()" id="subtn" class="btn btn-primary">Submit</a>
+    <div class="col-md-8" id="picArea">
+    </div>
+    <br />
+
+  </div>
+</body>
+<script type="text/javascript">
+  var editor;
+  $(document).ready(function () {
+    $("script").ready(function () {
+      CKEDITOR.replace('editor');
+      $("#pDate").attr("value", today());
+      $("#eDate").attr("value", today());
+
+      $("#pDate").change(function () {                    //doesn't work for whatever reason
+        var v = $(this).val();
+        if (v.length > 10) {
+          var d = v.split("-");
+          var yy = d[0].substring(0, 4);
+          var mm = d[1];
+          var dd = d[2];
+          $("#pDate").attr("value", (yy + "-" + mm + "-" + dd));
+
+        }
+
+      });
+
+      $('#txtUploadFile').on('change', function (e) {
+        CreateTempFileForViewing();
+      });
+
+    });
+  });
+
+  function submit() {
+    var exp = $("#eDate").val();
+    if (exp == today())
+      exp = "9999" + exp.substring(4, exp.length - 1);
+    var body = CKEDITOR.instances.editor.getData();
+    var title = $("input[name='title']").val();
+    if (body == "" || title == "")
+      return;
+    var blog_data = {
+      "Title": title,
+      "ScheduleDate": $("#pDate").val(),
+      "ExpirationDate": exp,
+      "DisplayAuthor": $("#poster").val(),
+      "DateCreated": today(),
+      "PostContent": body,
+      "PostImage": parseFilename($("#txtUploadFile").val()),               //snag the file path from the <img> in the DOM
+      "Tags": getTags()
+    };
+    $.ajax({
+      type: 'POST',
+      url: "http://localhost:56490/api/add",
+      data: blog_data,
+      dataType: "text",
+      success: function (r) {
+        fileSave();
+        alert("Your post got booped to the server!");
+      },
+      error: function (r) {
+        alert("Oh noes :( the server did an error on you!");
+      }
+    });
+
+  }
+
+  function parseFilename(fname) {
+    var rv = fname.split("").reverse();
+    var filename = "";
+    var type = "";
+    var inc = 0;
+    for (var i = 0; i < fname.length && inc < 2; i++) {
+      if (inc == 0) {
+        if (rv[i] != ".")
+          type += rv[i];
+        else {
+          inc++;
+          type = type.split("").reverse().toString();
+          type = stripCurlys(type);
+        }
+      } else if (inc == 1) {
+        if (rv[i] != "\\" && rv[i] != "/")
+          filename += rv[i];
+        else {
+          inc++;
+          filename = filename.split("").reverse().toString();
+          filename = stripCurlys(filename);
+        }
+      }
+    }
+    return filename + "." + type;
+  }
+  function stripCurlys(arg) {
+    while (arg.includes(","))
+      arg = arg.replace(/,/, "");
+    return arg;
+  }
+
+  function getTags() {                        //grab and parse
+    var dlms = ["#", "^", "|", ",", ".", "/", "\\", ":", "*", "&", "%", "$", "!"];
+    var tags = $("input[name='tags']").val(); //get the text val of the tags
+    for (var i = 0; i < dlms.length; i++) {   //get rid of any pesky delimiters
+      if (tags.includes(dlms[i]))             //that might be hanging around
+        tags.replace(dlms[i], " ");           //boop and bye
+    }
+    tags.replace("  ", " ");                  //jic someone did something like %wat or #omgitsapoundsign
+    return tags.split(" ");
+  }
+
+  function today() {
+    var tt = new Date();
+    var dd = tt.getDate();
+    var mm = tt.getMonth() + 1;
+    var yy = tt.getFullYear();
+    if (dd < 10) dd = '0' + dd;
+    if (mm < 10) mm = '0' + mm;
+    return yy + "-" + mm + "-" + dd;
+  }
+
+</script>
+</html>
+}

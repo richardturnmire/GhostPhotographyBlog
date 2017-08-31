@@ -1,0 +1,82 @@
+﻿body {
+    padding-top: 50px;
+    padding-bottom: 20px;
+    background-color: #666666;
+    font-family: 'Coming Soon', cursive;
+    color: ghostwhite
+}
+
+/* Set padding to keep content from hitting the edges */
+.body-content {
+    padding-left: 15px;
+    padding-right: 15px;
+}
+
+/* Override the default bootstrap behavior where horizontal description lists 
+   will truncate terms that are too long to fit in the left column 
+*/
+.dl-horizontal dt {
+    white-space: normal;
+}
+
+/* Set width on the form input elements since they're 100% wide by default */
+input,
+select,
+textarea {
+    max-width: 280px;
+}
+
+.front-image {
+    
+    height: 115%;
+    background-size: cover;
+    background-repeat: no-repeat;
+    color: white;
+    text-shadow: black 0.3em 0.3em 0.3em;
+}
+
+.front-title {
+    padding-top: 50%;
+    padding-left: 10px;
+}
+
+.lead {
+    padding-left: 10px;
+}
+
+.blog-snippet {
+    border: 1px solid black;
+    margin: 2%;
+    padding: 2%;
+    background-color: #806666;
+    border-radius: 6px;
+}
+
+.blog-snippet:hover {
+    box-shadow: 5px 5px 2px #5f6263;
+}
+
+.blog-image{
+    height: 450px;
+}
+
+.comment {
+    border: 1px solid black;
+    border-radius: 5px;
+    margin: 1%;
+    padding-top: 2%;
+    padding-bottom: 2%;
+    background-color: #806666;
+    box-shadow: 3px 3px 1px #5f6263;
+}
+
+.comment:hover {
+    box-shadow: 5px 5px 2px #5f6263;
+    color:darkslategray;
+    font-weight: 700;
+}
+
+.titles {
+    font-family: 'Eater', cursive;
+    font-weight: 900;
+}

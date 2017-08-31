@@ -1,0 +1,120 @@
+﻿@using System.Web.Mvc.Html
+@using System.Web.UI.WebControls
+@using GhostPhotographerBlog.UI.Models
+@using GhostPhotographerBlog.UI.Helpers
+@model BlogPostSnippetViewModel
+
+@{
+    ViewBag.Title = "Home Page";
+}
+
+
+<div class="img-responsive front-image" style="background-image: url(@ViewBag.JumboImage);">
+    <div style="font-family: Nosifer, cursive; color: red">
+        <h1 class="front-title">Fatal Frames</h1>
+        <p class="lead">I shoot ghosts... They don't shoot me!</p>
+    </div>
+</div>
+
+<hr />
+@Html.ValidationSummary(true)
+
+<div class="row" style="font-family: Nosifer, cursive; color: red;">
+    <div class="col-md-4" style="margin-top: 5px;">
+        <h2 style="margin: 0">Scary Thoughts</h2>
+    </div>
+
+    <div class="col-md-offset-1 col-md-7">
+        <div class="row">
+            <div class="col-md-12">
+
+                <form class="form-wrapper form-inline form-horizontal   " style="background-color: #c1cbe6; color: red;"
+                      asp-action="Index" asp-controller="Home" enctype="multipart/form-data" method="get">
+                    <div class="row">
+                        <div class="col-md-10">
+                            @Html.EnumDropDownListFor(m => m.SearchType, "Choose from", new { @class = "form-control searchBox" })
+                            @Html.ValidationMessageFor(m => m.SearchType)
+
+                            @Html.EditorFor(m => m.SearchArg, new { placeholder = "Search for...", @class = "form-control searchBox" })
+                            @Html.ValidationMessageFor(m => m.SearchArg)
+
+                        </div>
+
+                        <div class="col-md-2 pull-right">
+                            <button type="submit" class="btn pull-right form-control" id="submit">Boo!</button>
+                        </div>
+                    </div>
+
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<hr />
+
+<div class="row">
+    <nav aria-label="...">
+        <ul class="pagination justify-content-center" style="background-color: #c1cbe6">
+            @for (int i = 1; i <= Model.BlogPostPageCount; i++)
+            {
+                <li class="page-item">@Html.ActionLink(i.ToString(), "NewPage", "Home", routeValues: new { id = i }, htmlAttributes: null)</li>
+            }
+        </ul>
+    </nav>
+</div>
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-9">
+            @foreach (BlogPostViewModel blog in Model.Snippets)
+            {
+                @Html.Partial("_BlogSnippet", blog)
+            }
+        </div>
+        <div class="col-md-3">
+            <div class="panel" id="articles">
+                <div class="panel-heading"><h2>Articles</h2></div>
+            </div>
+            <div class="panel" id="tagpanel">
+                <div class="panel-heading"><h2>Tags</h2></div>
+                <div class="panel-body">
+                    <ul id="tagcloud" class="col-md-12">
+                        @foreach (HashTagWeightViewModel ht in Model.HashTags)
+                        {
+                            var cls = "tag" + ht.HashtagWeight;
+                            <li class="@cls">@Html.ActionLink(@ht.HashtagName, "Index", "Home", routeValues: new { SearchType = 3, SearchArg = ht.HashtagName }, htmlAttributes: null)</li>
+                        }
+                    </ul>
+                </div>
+            </div>
+            <div class="panel" id="archive">
+                <div class="panel-heading"><h2>Archive</h2></div>
+            </div>
+        </div>
+
+    </div>
+
+    <hr />
+
+    <nav aria-label="...">
+        <ul class="pagination justify-content-center">
+            @for (int i = 1; i <= Model.BlogPostPageCount; i++)
+            {
+                <li class="page-item">@Html.ActionLink(i.ToString(), "NewPage", "Home", routeValues: new { id = i }, htmlAttributes: null)</li>
+            }
+
+        </ul>
+    </nav>
+</div>
+
+
+@section Scripts
+{
+    <script>
+        $(document).ready(function () {
+            // getTagsandCounts();
+        });
+    </script>
+    <script src="~/Scripts/index.js"></script>
+}

@@ -1,0 +1,142 @@
+﻿@using GhostPhotographerBlog.UI.Models
+@model AdminPageModel
+<!DOCTYPE html>
+<html>
+@if (ViewBag.Role != "Admin" && ViewBag.Role != "Writer") {
+    <script>window.location.href = "http://localhost:56490/"</script>
+} else {
+<head>
+  <meta name="viewport" content="width=device-width" />
+  <title>Admin Landing Page</title>
+  <script src="~/Scripts/jquery-3.1.1.js"></script>
+  <script src="~/CkEditor/ckeditor/ckeditor.js"></script>
+  <script src="~/CkEditor/ckeditor/adapters/jquery.js"></script>
+  <script src="~/Scripts/bootstrap.js"></script>
+  <style href="~/Content/bootstrap.css"></style>
+  <style>
+    table {
+      margin: 10%;
+      padding: 5%;
+    }
+    th, td {
+      padding: 15px;
+    }
+   
+  </style>
+</head>
+<body>
+@if (ViewBag.Role == "Writer") {
+    <script>window.location.href = "http://localhost:56490/admin/new"</script>
+} else if (ViewBag.Role == "Admin") {
+    <div class="container">
+      <div class="row">
+        <div class="col-md-6">
+          <table id="pp" name="pp" class="table">
+            <thead>
+              <tr>
+                <th>Author</th>
+                <th>Pseudonym</th>
+                <th colspan="2">Title</th>
+                <th>Date created</th>
+                <th>Date to be posted</th>
+                <th></th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
+              @{
+                  foreach (var post in Model.Posts) {
+                  <tr id="@post.Id-param">
+                    <td>@post.Author</td>
+                    <td>@post.DisplayAuthor</td>
+                    <td colspan="2">@post.Title</td>
+                    <td>@post.DateCreated</td>
+                    <td>@post.ScheduleDate</td>
+                    <td colspan="2">
+                      <select style="color: black;">
+                        <option>Approve</option>
+                        <option>Edit</option>
+                        <option>Delete</option>
+                      </select>
+                    </td>
+                    <td>
+                      <input type="button" class="form-control" onclick="doAThing(@post.Id)" value="Go"/>
+                    </td>
+                  </tr>
+                  }
+              }
+            </tbody>
+          </table>
+        </div>
+        <div class="col-md-1">
+         <input type="button" class="btn-default" value="New Post" onclick="toNewPost()"/>
+        </div>
+        <div class="col-md-5">
+          <table>
+            <tr>
+              <th>Username</th>
+              <th>Privileges</th>
+            </tr>
+            @{
+                foreach (var user in Model.Users) {
+                    <tr>
+                      <td>@user.UserName</td>
+                      <td>@user.RoleName</td>
+                    </tr>
+                }
+            }
+            <tr>
+              <td>
+                <input class="form-control" type="text" name="name" placeholder="Name" />
+              </td>
+              <td>
+                <select class="form-control" name="role">
+                  <option>Admin</option>
+                  <option>Writer</option>
+                </select>
+              </td>
+            </tr>
+            <tr>
+              <td colspan="2" style="text-align:center;">
+                <input type="button" class="btn-danger" value="Create"/>
+              </td>
+            </tr>
+          </table>
+        </div>
+      </div>
+    </div>
+}
+</body>
+<script type="text/javascript">
+  $(document).ready(function () {
+    $("script").ready(function () {
+
+
+
+
+    });
+  });
+
+  function doAThing(id) {
+    var p = $("#" + id + "-param select").val();
+    if (p == "Edit")
+      window.location.href = "http://localhost:56490/admin/edit/" + id;
+    else
+      $.ajax({
+        type: 'POST',
+        url: "http://localhost:56490/api/" + p + "/" + id,
+        dataType: "text",
+        success: function (r) {
+          alert("successful file boop");
+        },
+        error: function (r) {
+          alert("server did a hiccup");
+        }
+      });
+  }
+  function toNewPost() {
+    window.location.href = "http://localhost:56490/admin/new";
+  }
+</script>
+}
+</html>

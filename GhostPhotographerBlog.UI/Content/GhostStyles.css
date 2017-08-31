@@ -1,0 +1,103 @@
+﻿#tagcloud {
+    display: flex;
+    flex-flow: row wrap;
+    margin: 0;
+    padding: 0;
+}
+
+#tagpanel, #archive, #articles {
+    margin: 20px 0 0 0%;
+    
+    padding: 2%;
+    border-radius: 6px;
+    background-color: #c1cbe6;
+    height: 300px;
+    border: 1px solid black;
+}
+
+#archive .panel-heading {
+    text-align: center;
+    border-bottom: 1px solid white;
+}
+
+ #articles  .panel-heading {
+        text-align: center;
+        border-bottom: 1px solid white;
+    }
+
+#tagpanel .panel-heading {
+    text-align: center;
+    border-bottom: 1px solid white;
+}
+
+#tagcloud a {
+    padding: 0;
+    color: inherit;
+}
+
+#tagcloud li {
+    display: inline;
+    padding: 0;
+    flex: auto;
+}
+
+#tagcloud .tag1 {
+    font-size: 0.7em;
+    font-weight: 100;
+    color: #ff0000;
+}
+
+#tagcloud .tag2 {
+    font-size: 0.8em;
+    font-weight: 200;
+    color: #ea009c;
+}
+
+#tagcloud .tag3 {
+    font-size: 0.9em;
+    font-weight: 300;
+    color: #8300d5;
+}
+
+#tagcloud .tag4 {
+    font-size: 1.0em;
+    font-weight: 400;
+    color: #4300ca;
+}
+
+#tagcloud .tag5 {
+    font-size: 1.2em;
+    font-weight: 500;
+    color: #0000c0;
+}
+
+#tagcloud .tag6 {
+    font-size: 1.4em;
+    font-weight: 600;
+    color: #003cb5;
+}
+
+#tagcloud .tag7 {
+    font-size: 1.6em;
+    font-weight: 700;
+    color: #0072aa;
+}
+
+#tagcloud .tag8 {
+    font-size: 1.8em;
+    font-weight: 800;
+    color: #00a0a0;
+}
+
+#tagcloud .tag9 {
+    font-size: 2.2em;
+    font-weight: 900;
+    color: #009563;
+}
+
+#tagcloud .tag10 {
+    font-size: 2.5em;
+    font-weight: 900;
+    color: #008000;
+    margin: 0;
+}

@@ -1,0 +1,41 @@
+﻿<div>
+    <div class="panel panel-primary" style="margin-top: 20px;">
+        <div class="row">
+            <div class="col-md-4">
+                <p>
+                    <label for="txtUploadFile">Filename:</label>
+                    <input type="file" name="UploadFile" id="txtUploadFile" accept="image/jpeg" ) />
+                </p>
+                <br />
+                <p>
+                    <input type="button" class="btn btn-warning" onclick="fileSave()" name="SaveBtn" value="Save" id="btnSave"/>
+                </p>       
+                <p>
+                <input type="button" class="btn btn-warning" onclick="fileDelete()" name="CancelBtn" value="Cancel" id="btnCancel"/>
+                </p>
+            </div>    
+            <div id="imgName" hidden></div>
+            <div class="col-md-8" id="picArea">
+
+            </div>
+
+           
+
+        </div>
+
+    </div>
+</div>          
+
+@*input[type=file]'*@
+
+@section Scripts
+{
+    <script>
+        
+        $(document).ready(function () {
+          fileUpload();
+        });
+    </script>
+}
+
+
